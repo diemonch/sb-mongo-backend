@@ -48,6 +48,12 @@ public class CourseServiceImplementor implements CourseService {
 		}
 		return new ArrayList<Courses>();
 	}
+
+	@Override
+	public Courses getSingleCourse(String id) throws CourseCollectionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 

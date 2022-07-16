@@ -13,4 +13,6 @@ public interface CourseService {
 	
 	public List<Courses> getAllCourses();
 	
+	public Courses getSingleCourse(String id) throws CourseCollectionException;
+	
 }
