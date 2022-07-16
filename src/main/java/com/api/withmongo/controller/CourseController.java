@@ -57,25 +57,18 @@ public class CourseController {
 	
 	@PutMapping("/courses/{id}")
 	public ResponseEntity<?> updateCourse(@PathVariable("id") String id, @RequestBody Courses course) {
-		
-		//List<Courses> courseList = courseRepo.findAll();
-		Optional<Courses> courseID = courseRepo.findById(id);
-		if(courseID.isPresent()) {
 			
-			Courses courseToSave=courseID.get();
-			courseToSave.setName(course.getName());
-			courseToSave.setAuthor(course.getAuthor());
-			courseToSave.setDescription(course.getDescription());
-			courseToSave.setDuration(course.getDuration());
-			courseToSave.setUdateddate(course.getUdateddate());
-			courseRepo.save(courseToSave);
-			return new ResponseEntity<>(courseToSave,HttpStatus.OK);
-		}
-		else {
+		try {
+			courseService.updateCourse(id, course);
+			return new ResponseEntity<>("Course details of Id: "+id+" has been updated", HttpStatus.OK);
 			
-			return new ResponseEntity<>("Course Data Not Found for"+id,HttpStatus.NOT_FOUND);
+		} catch (ConstraintViolationException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+			
+		} catch(CourseCollectionException e) {
+			
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
 		}
-		
 		
 	}
 	
@@ -91,12 +84,12 @@ public class CourseController {
 			
 			return new ResponseEntity<Courses>(course,HttpStatus.OK);
 		}catch(ConstraintViolationException e) {
-			System.out.println("----Exception Block ----Constraint Exception--");
+			
 			
 			return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
 		}catch(CourseCollectionException e)
 		{
-			System.out.println("----Exception Block ----CourseCollection Exception--");
+			
 			return new ResponseEntity<>(e.getMessage(),HttpStatus.CONFLICT);
 		}
 		
@@ -108,11 +101,11 @@ public class CourseController {
 		
 		try {
 			
-			courseRepo.deleteById(id);
+			courseService.deleteCourse(id);
 			return new ResponseEntity<>("Course Details Has been deleted for id: "+id,HttpStatus.OK);
-		}catch(Exception e) {
+		}catch(CourseCollectionException e) {
 			
-			return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
 		}
 		
 	}

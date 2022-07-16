@@ -15,4 +15,8 @@ public interface CourseService {
 	
 	public Courses getSingleCourse(String id) throws CourseCollectionException;
 	
+	public void updateCourse(String id,Courses course) throws CourseCollectionException;
+	
+	public void deleteCourse(String id) throws CourseCollectionException;
+	
 }
