@@ -8,6 +8,8 @@ import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.api.withmongo.exception.CourseCollectionException;
@@ -60,6 +62,38 @@ public class CourseServiceImplementor implements CourseService {
 		} else {
 			
 			return findById.get();
+		}
+		
+	}
+
+	@Override
+	public void updateCourse(String id, Courses course) throws CourseCollectionException {
+		
+		Optional<Courses> courseID = courseRepository.findById(id);
+		Optional<Courses> courseWithSameName = courseRepository.findbyCourse(course.getName());
+		
+		if(courseID.isPresent()) {
+			
+			if(courseWithSameName.isPresent() && !courseWithSameName.get().getId().equals(id))
+			{
+				throw new CourseCollectionException(
+						CourseCollectionException.CourseAlreadyExistsException());
+				
+			}
+			
+			Courses courseToSave=courseID.get();
+			courseToSave.setName(course.getName());
+			courseToSave.setAuthor(course.getAuthor());
+			courseToSave.setDescription(course.getDescription());
+			courseToSave.setDuration(course.getDuration());
+			courseToSave.setUdateddate(course.getUdateddate());
+			courseRepository.save(courseToSave);
+			
+		}
+		else {
+			
+			throw new CourseCollectionException(CourseCollectionException.CourseNotFoundException(id));
+
 		}
 		
 	}
