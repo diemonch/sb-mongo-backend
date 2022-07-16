@@ -97,6 +97,22 @@ public class CourseServiceImplementor implements CourseService {
 		}
 		
 	}
+
+	@Override
+	public void deleteCourse(String id) throws CourseCollectionException {
+		
+		Optional<Courses> findById = courseRepository.findById(id);
+		
+		if(!findById.isPresent()) {
+			
+			throw new CourseCollectionException(CourseCollectionException.CourseNotFoundException(id));
+		} else {
+			
+			courseRepository.deleteById(id);
+		}
+		
+		
+	}
 	
 	
 

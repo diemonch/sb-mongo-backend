@@ -84,12 +84,12 @@ public class CourseController {
 			
 			return new ResponseEntity<Courses>(course,HttpStatus.OK);
 		}catch(ConstraintViolationException e) {
-			System.out.println("----Exception Block ----Constraint Exception--");
+			
 			
 			return new ResponseEntity<>(e.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
 		}catch(CourseCollectionException e)
 		{
-			System.out.println("----Exception Block ----CourseCollection Exception--");
+			
 			return new ResponseEntity<>(e.getMessage(),HttpStatus.CONFLICT);
 		}
 		
@@ -101,11 +101,11 @@ public class CourseController {
 		
 		try {
 			
-			courseRepo.deleteById(id);
+			courseService.deleteCourse(id);
 			return new ResponseEntity<>("Course Details Has been deleted for id: "+id,HttpStatus.OK);
-		}catch(Exception e) {
+		}catch(CourseCollectionException e) {
 			
-			return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
 		}
 		
 	}
