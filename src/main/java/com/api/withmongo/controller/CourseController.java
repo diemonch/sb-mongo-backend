@@ -46,18 +46,13 @@ public class CourseController {
 	@GetMapping("/courses/{id}")
 	public ResponseEntity<?> getOneCourse(@PathVariable("id") String id) {
 		
-		//List<Courses> courseList = courseRepo.findAll();
-		Optional<Courses> course = courseRepo.findById(id);
-		if(course.isPresent()) {
+		try {
+			return new ResponseEntity<>(courseService.getSingleCourse(id),HttpStatus.OK);
+		} catch (Exception e) {
 			
-			return new ResponseEntity<>(course.get(),HttpStatus.OK);
+			return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+				
 		}
-		else {
-			
-			return new ResponseEntity<>("Course Data Not Found for"+id,HttpStatus.NOT_FOUND);
-		}
-		
-		
 	}
 	
 	@PutMapping("/courses/{id}")

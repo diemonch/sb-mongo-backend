@@ -51,8 +51,17 @@ public class CourseServiceImplementor implements CourseService {
 
 	@Override
 	public Courses getSingleCourse(String id) throws CourseCollectionException {
-		// TODO Auto-generated method stub
-		return null;
+	
+		Optional<Courses> findById = courseRepository.findById(id);
+		
+		if(!findById.isPresent()) {
+			
+			throw new CourseCollectionException(CourseCollectionException.CourseNotFoundException(id));
+		} else {
+			
+			return findById.get();
+		}
+		
 	}
 	
 	
